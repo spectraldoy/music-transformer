@@ -12,8 +12,6 @@ for music-transformer, or at https://www.gnu.org/licenses/gpl-3.0.html.
 """
 
 import torch
-import generate
-import time
 from math import sqrt
 from torch import nn
 from hparams import hparams
@@ -80,39 +78,6 @@ class MusicTransformer(nn.Module):
         )
 
         self.final = nn.Linear(d_model, vocab_size)
-
-    @classmethod
-    def generate(cls, inp, save_path="./bloop.mid", save_wav=True, save_flac=False,
-                 temperature=1.0, mode="categorical", k=None, tempo=512820, verbose=False):
-        """
-        TODO
-        NOTE: long time
-
-        Args:
-            inp:
-            save_path:
-            temperature:
-            mode:
-            k:
-            tempo:
-            save_wav:
-            save_flac:
-            verbose:
-
-        Returns:
-
-        """
-        # greedy decode
-        print("Greedy decoding...") if verbose else None
-        start = time.time()
-        token_ids = generate.greedy_decode(model=cls, inp=inp, mode=mode, temperature=temperature, k=k)
-        end = time.time()
-        print(f"Generated {len(token_ids)} tokens.", end=" ") if verbose else None
-        print(f"Time taken: {round(end - start, 2)} secs.") if verbose else None
-
-        # generate audio
-        return generate.audiate(token_ids=token_ids, save_path=save_path, save_wav=save_wav, save_flac=save_flac,
-                                tempo=tempo, verbose=verbose)
 
     def forward(self, x, mask=None):
         """

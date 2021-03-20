@@ -2,5 +2,3 @@ setuptools~=51.0.0
 mido~=1.2.9
 torch~=1.7.1
 numpy~=1.19.2
-ipython~=7.19.0
-midi2audio~=0.1.1

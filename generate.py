@@ -13,19 +13,15 @@ for music-transformer, or at https://www.gnu.org/licenses/gpl-3.0.html.
 
 import torch
 import mido
+import time
 import argparse
-from midi2audio import FluidSynth
-from IPython.display import Audio
 from masking import *
 from tokenizer import *
 from vocabulary import *
 
 """
-Functionality to use Music-Transformer model after (or during) training
+Functionality to use Music-Transformer model after (or during) training to generate audio
 """
-
-
-# TODO: test
 
 
 def greedy_decode(model, inp, mode="categorical", temperature=1.0, k=None):
@@ -55,18 +51,18 @@ def greedy_decode(model, inp, mode="categorical", temperature=1.0, k=None):
 
     # parameters for decode sampling
     if not callable(temperature):
-        temperature_ = temperature
+        temperature__ = temperature
         del temperature
 
         def temperature(x):
-            return temperature_
+            return temperature__
 
     if k is not None and not callable(k):
-        k_ = k
+        k__ = k
         del k
 
         def k(x):
-            return k_
+            return k__
 
     # autoregressively generate output
     try:
@@ -114,15 +110,13 @@ def greedy_decode(model, inp, mode="categorical", temperature=1.0, k=None):
     return inp.squeeze()
 
 
-def audiate(token_ids, save_path="gneurshk.mid", save_wav=True, save_flac=False, tempo=512820, verbose=False):
+def audiate(token_ids, save_path="gneurshk.mid", tempo=512820, verbose=False):
     """
     TODO: desc and sample rate / font / gain
 
     Args:
         token_ids:
         save_path:
-        save_wav:
-        save_flac:
         tempo:
         verbose:
 
@@ -142,7 +136,7 @@ def audiate(token_ids, save_path="gneurshk.mid", save_wav=True, save_flac=False,
     mid = list_parser(token_ids, fname=save_path[:-4], tempo=tempo)
     mid.save(save_path)
 
-    # save other file formats
+    """ save other file formats
     if save_flac:
         flac_path = save_path[:-4] + ".flac"
         print(f"Saving flac file at {flac_path}...") if verbose else None
@@ -157,14 +151,45 @@ def audiate(token_ids, save_path="gneurshk.mid", save_wav=True, save_flac=False,
 
         # useful for ipynbs
         return Audio(wav_path)
+    """
 
     return
+
+
+def generate(model_, inp, save_path="./bloop.mid", temperature=1.0, mode="categorical", k=None,
+             tempo=512820, verbose=False):
+    """
+    TODO
+    NOTE: long time
+
+    Args:
+        model_:
+        inp:
+        save_path:
+        temperature:
+        mode:
+        k:
+        tempo:
+        verbose:
+
+    Returns:
+
+    """
+    # greedy decode
+    print("Greedy decoding...") if verbose else None
+    start = time.time()
+    token_ids = greedy_decode(model=model_, inp=inp, mode=mode, temperature=temperature, k=k)
+    end = time.time()
+    print(f"Generated {len(token_ids)} tokens.", end=" ") if verbose else None
+    print(f"Time taken: {round(end - start, 2)} secs.") if verbose else None
+
+    # generate audio
+    return audiate(token_ids=token_ids, save_path=save_path, tempo=tempo, verbose=verbose)
 
 
 if __name__ == "__main__":
     from model import MusicTransformer
     from hparams import hparams
-
 
     def check_positive(x):
         if x is None:
@@ -173,7 +198,6 @@ if __name__ == "__main__":
         if x <= 0:
             raise argparse.ArgumentTypeError(f"{x} is not a positive integer")
         return x
-
 
     def load_model(filepath):
         """
@@ -199,15 +223,14 @@ if __name__ == "__main__":
         model.eval()
         return model
 
-
     parser = argparse.ArgumentParser(
         prog="generate.py",
-        description="Generate midi, wav, and flac audio with a Music Transformer!"
+        description="Generate midi audio with a Music Transformer!"
     )
     parser.add_argument("path_to_model", help="string path to a .pt file at which has been saved a dictionary "
                                               "containing the model state dict and hyperparameters", type=str)
     parser.add_argument("save_path", help="path at which to save the generated midi file", type=str)
-    parser.add_argument("mode", help="specify 'categorical' or 'argmax' mode of decode sampling", type=str)
+    parser.add_argument("-m", "--mode", help="specify 'categorical' or 'argmax' mode of decode sampling", type=str)
     parser.add_argument("-k", "--top-k", help="top k samples to consider while decode sampling; default: all",
                         type=check_positive)
     parser.add_argument("-t", "--temperature",
@@ -216,16 +239,22 @@ if __name__ == "__main__":
                              "model output)",
                         type=float)
     parser.add_argument("-tm", "--tempo", help="approximate tempo of generated sample in BMP", type=check_positive)
+    """
     parser.add_argument("-w", "--save-wav", help="flag to save a wav file along with the generated midi file",
                         action="store_true")
     parser.add_argument("-f", "--save-flac", help="flag to save a flac file along with the generated midi file",
                         action="store_true")
+    """
     parser.add_argument("-v", "--verbose", help="verbose output flag", action="store_true")
 
     args = parser.parse_args()
-    tempo_ = 60 * 1e6 / int(args.tempo)  # convert BPM to µs / beat
+
+    # fix arguments
+    temperature_ = float(args.temperature) if args.temperature else 1.0
+    mode_ = args.mode if args.mode else "categorical"
+    k_ = int(args.top_k) if args.top_k else None
+    tempo_ = int(60 * 1e6 / int(args.tempo)) if args.tempo else 600000
 
     music_transformer = load_model(args.path_to_model)
-    music_transformer.generate(inp=[start_token], save_path=args.save_path, save_wav=args.save_wav,
-                               save_flac=args.save_flac, temperature=float(args.temperature), k=int(args.top_k),
-                               tempo=tempo_, verbose=args.verbose)
+    generate(model_=music_transformer, inp=["<start>"], save_path=args.save_path,
+             temperature=temperature_, mode=mode_, k=k_, tempo=tempo_, verbose=args.verbose)
