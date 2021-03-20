@@ -32,7 +32,7 @@ def midi_parser(fname=None, mid=None):
         mid (mido.MidiFile): loaded midi file
 
     Returns:
-        index_list (torch.tensor): list of indices in vocab
+        index_list (torch.Tensor): list of indices in vocab
         event_list (list): list of events in vocab
     """
     # take only one of fname or mid
@@ -134,7 +134,7 @@ def list_parser(index_list=None, event_list=None, fname="bloop", tempo=512820):
     Translates a set of events or indices in the Oore et. al, 2018 vocabulary into a midi file
 
     Args:
-        index_list (list or torch.tensor): list of indices in vocab OR
+        index_list (list or torch.Tensor): list of indices in vocab OR
         event_list (list): list of events in vocab
         fname (str, optional): name for single track of midi file returned
         tempo (int, optional): tempo of midi file returned in µs / beat,
