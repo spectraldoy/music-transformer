@@ -11,7 +11,7 @@ Note that in this README `...` in a path name is used to denote the rest of the 
 2. Mido ~1.2.9
 
 ## Setting up
-Clone, the git repository, cd into it, and install the requirements. Then you're ready to preprocess MIDI files, as well as train, and generate music with a Music Transformer.
+Clone, the git repository, cd into it, and install the requirements. Then you're ready to preprocess MIDI files, as well as train and generate music with a Music Transformer.
 ```shell
 git clone https://github.com/spectraldoy/music-transformer
 cd ./music-transformer
