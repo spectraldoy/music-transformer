@@ -18,7 +18,7 @@ cd ./music-transformer
 pip install -r requirements.txt
 ```
 
-## Preprocessing MIDI Data
+## Preprocess MIDI Data
 Most sequence models require a general upper limit on the length of the sequences being model, it being too computationally or memory expensive to handle longer sequences. So, suppose you have a directory of MIDI files at `.../datapath/`, and would like to convert these files into an event vocabulary that can be trained on, cut these sequences to be less than or equal to an approximate maximum length, `lth`, and store this processed data in a single PyTorch tensor (for use with `torch.utils.data.TensorDataset`) at `.../processed_data.pt`. Running the `preprocessing.py` script as follows:
 ```shell
 python preprocessing.py .../datapath/ .../processed_data.pt lth
@@ -27,7 +27,7 @@ will translate the MIDI files to the event vocabulary laid out in `vocabulary.py
 
 NOTE: I DESIGNED THE MIDI TRANSLATION FUNCTIONALITY TO BE ABLE TO TRANSLATE ONLY SINGLE TRACK PIANO MIDI TO THE EVENT VOCABULARY, AS MY GOAL WAS TO GENERATE PIANO MUSIC. THIS SCRIPT WILL NOT WORK PROPERLY FOR MULTI-TRACK MIDI FILES, AND ANY OTHER INSTRUMENTS WILL BE CONVERTED TO PIANO.
 
-## Training a Model
+## Train a Music Transformer
 Being a ridiculously large model, requiring inordinate amounts of time to train on both GPUs as well as TPUs, the Music Transformer needs to be checkpointed while training. I implemented a deliberate and slightly unwieldy checkpointing mechanism in the `MusicTransformerTrainer` class from `train.py`, to be able to checkpoint while training a Music Transformer. At it's very simplest, given a path to a preprocessed dataset in the form of a PyTorch tensor, `.../preprocessed_data.pt`, and specifying a path at which to checkpoint the model, `.../ckpt_path.pt`, a path at which to save the model, and the number of epochs for which to train the model this current session, `epochs`, running the following:
 ```shell
 python train.py .../preprocessed_data.pt .../ckpt_path.pt .../save_path.pt epochs
@@ -38,7 +38,7 @@ python train.py .../preprocessed_data.pt .../ckpt_path.pt .../save_path.pt epoch
 ```
 the latest checkpoint stored at `.../ckpt_path.pt` will be loaded, overloading any hyperparameters specified in this script run with the original hyperparameters of the saved model, restoring the model, optimizer, and learning rate schedule states, and continuing training from there. Once training is completed, the model's `state_dict` and `hparams` will be stored in a Python dictionary and saved at `.../save_path.pt`.
 
-## Generating MIDI Audio
+## Generate Music!
 Of course the Music Transformer is useless if we can't generate music with it. Given a pretrained Music Transformers's `state_dict` and `hparams` saved at `.../save_path.pt`, and specifying the path at which to save a generated MIDI file, `.../gen_audio.mid`, running the following:
 ```shell
 python generate.py .../save_path.pt .../gen_audio.mid
