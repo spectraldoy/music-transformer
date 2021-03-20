@@ -29,8 +29,7 @@ The transformer is an autoregressive model, which means that at the inference st
 based on its previous outputs. However, while training, we can use teacher forcing - feeding the target into the 
 model as previous output regardless of the true output of the model. This significantly cuts down on the compute 
 required, while usually reducing loss (at the expense of generalizability of the model). Since we are training a 
-generative model, the targets are simply the inputs shifted right by 1 position. The data must be cut this way,
-then the model, optimizer, and learning rate schedule must be created, then we can train.
+generative model, the targets are simply the inputs shifted right by 1 position.
 """
 
 
