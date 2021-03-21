@@ -411,6 +411,7 @@ if __name__ == "__main__":
     hparams["num_heads"] = args.num_heads if args.num_heads else hparams["num_heads"]
     hparams["d_ff"] = args.d_feedforward if args.d_feedforward else hparams["d_ff"]
     hparams["max_rel_dist"] = args.max_rel_dist if args.max_rel_dist else hparams["max_rel_dist"]
+    hparams["max_abs_position"] = args.max_abs_position if args.max_abs_position else hparams["max_abs_position"]
     hparams["bias"] = args.no_bias
     hparams["dropout"] = args.dropout if args.dropout else hparams["dropout"]
     hparams["layernorm_eps"] = args.layernorm_eps if args.layernorm_eps else hparams["layernorm_eps"]
