@@ -269,7 +269,8 @@ class MusicTransformerTrainer:
     def fit(self, epochs):
         """
         Training loop to fit the model to the data stored at the passed in datapath. If KeyboardInterrupt at anytime
-        during the training loop, this method will save a checkpoint at the passed in ckpt_path
+        during the training loop, and if progresss being printed, this method will save a checkpoint at the 
+        passed-in ckpt_path
 
         Args:
             epochs: number of epochs to train for.
@@ -313,6 +314,9 @@ class MusicTransformerTrainer:
                 if ((epoch + 1) % print_interval) == 0:
                     print(f"Epoch {epoch + 1} Time taken {round(time.time() - start, 2)} seconds "
                           f"Train Loss {train_losses[-1]} Val Loss {val_losses[-1]}")
+                    print("Checkpointing...")
+                    self.save()
+                    print("Done")
                     start = time.time()
 
         except KeyboardInterrupt:
