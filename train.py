@@ -314,9 +314,9 @@ class MusicTransformerTrainer:
                 if ((epoch + 1) % print_interval) == 0:
                     print(f"Epoch {epoch + 1} Time taken {round(time.time() - start, 2)} seconds "
                           f"Train Loss {train_losses[-1]} Val Loss {val_losses[-1]}")
-                    print("Checkpointing...")
-                    self.save()
-                    print("Done")
+                    # print("Checkpointing...")
+                    # self.save()
+                    # print("Done")
                     start = time.time()
 
         except KeyboardInterrupt:
