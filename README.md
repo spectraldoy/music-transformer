@@ -33,7 +33,7 @@ Being a ridiculously large model, requiring inordinate amounts of time to train 
 ```shell
 python train.py .../preprocessed_data.pt .../ckpt_path.pt .../save_path.pt epochs
 ```
-will train the model for the specified number of `epochs` on the given dataset, printing progress messages, and will checkpoint the optimizer state, learning rate schedule state, model weights, and hyperparameters if a `KeyboardInterrupt` is encountered, or if the model finishes training for the specified number of `epochs`. Hyperparameters for the model can also be specified when creating a new model, i.e., not loading from a checkpoint (for details on these, run `python train.py -h`). However, if the `--load-checkpoint` flag is also entered:
+will train the model for the specified number of `epochs` on the given dataset, printing progress messages, and will checkpoint the optimizer state, learning rate schedule state, model weights, and hyperparameters if a `KeyboardInterrupt` is encountered, anytime a progress message is printed, and when the model finishes training for the specified number of `epochs`. Hyperparameters for the model can also be specified when creating a new model, i.e., not loading from a checkpoint (for details on these, run `python train.py -h`). However, if the `--load-checkpoint` flag is also entered:
 ```shell
 python train.py .../preprocessed_data.pt .../ckpt_path.pt .../save_path.pt epochs -l
 ```
