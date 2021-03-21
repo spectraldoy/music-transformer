@@ -387,7 +387,7 @@ if __name__ == "__main__":
                              "to generalize to longer sequences than in the dataset; if a sequence longer than the "
                              "passed in value is passed into the dataset, max_abs_position is set to that value not "
                              "the passed in; if loading from checkpoint, this will be overwritten by saved hparams; "
-                             "default: 20000", type=check_positive)
+                             "default: 20000", type=int)
     parser.add_argument("-nb", "--no-bias",
                         help="flag to not use a bias in the linear layers of the music transformer; if loading from "
                              "checkpoint, this will be overwritten by saved hparams; default: False",
