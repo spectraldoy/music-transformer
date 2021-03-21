@@ -273,7 +273,7 @@ if __name__ == "__main__":
     temperature_ = float(args.temperature) if args.temperature else 1.0
     mode_ = args.mode if args.mode else "categorical"
     k_ = int(args.top_k) if args.top_k else None
-    tempo_ = int(60 * 1e6 / int(args.tempo)) if args.tempo else 600000
+    tempo_ = int(60 * 1e6 / int(args.tempo)) if args.tempo else 512820
 
     music_transformer = load_model(args.path_to_model)
     generate(model_=music_transformer, inp=["<start>"], save_path=args.save_path,
