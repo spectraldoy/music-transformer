@@ -1,4 +1,4 @@
 setuptools~=51.0.0
 mido~=1.2.9
-torch~=1.7.1
-numpy~=1.19.2
+torch>=1.7.1
+numpy>=1.19.2
