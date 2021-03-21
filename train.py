@@ -281,6 +281,7 @@ class MusicTransformerTrainer:
         train_losses = []
         val_losses = []
         checkpointed = False
+        start = time.time()
 
         print("Beginning training...")
 
@@ -288,7 +289,6 @@ class MusicTransformerTrainer:
             for epoch in range(epochs):
                 train_epoch_losses = []
                 val_epoch_losses = []
-                start = time.time()
 
                 self.model.train()
                 for train_inp, train_tar in self.train_dl:
@@ -313,6 +313,7 @@ class MusicTransformerTrainer:
                 if ((epoch + 1) % print_interval) == 0:
                     print(f"Epoch {epoch + 1} Time taken {round(time.time() - start, 2)} seconds "
                           f"Train Loss {train_losses[-1]} Val Loss {val_losses[-1]}")
+                    start = time.time()
 
         except KeyboardInterrupt:
             checkpointed = True
