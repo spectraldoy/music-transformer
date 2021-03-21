@@ -163,7 +163,6 @@ class MusicTransformerTrainer:
         self.datapath = datapath
         self.batch_size = batch_size
         data = torch.load(datapath).long().to(device)
-        data = data[:5]
 
         # max absolute position must be able to acount for the largest sequence in the data
         hparams_["max_abs_position"] = max(hparams_["max_abs_position"], data.shape[-1])
