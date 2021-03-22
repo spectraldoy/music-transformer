@@ -63,7 +63,7 @@ def sample_data(seqs, lth, factor=6):
     data = []
     for seq in seqs:
         length = randint(lth - lth // factor, lth + lth // factor)
-        idx = randint(0, max(0, len(seq) - length + lth // factor))
+        idx = randint(0, max(0, len(seq) - length))
         data.append(seq[idx:idx+length])
         
     return data
