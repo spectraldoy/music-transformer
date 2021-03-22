@@ -237,7 +237,7 @@ if __name__ == "__main__":
 
     # randomly sample endings
     print("Randomly sampling and cutting data to length...") if args.verbose else None
-    DATA = sample_data(DATA, lth=args.length)
+    DATA = sample_data(DATA, lth=args.length) + sample_end_data(DATA, lth=args.length)
     print("Done!") if args.verbose else None
 
     # augment data
