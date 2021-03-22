@@ -18,6 +18,25 @@ cd ./music-transformer
 pip install -r requirements.txt
 ```
 
+## Generate Music!
+Of course the Music Transformer is useless if we can't generate music with it. The notebook <TODO:NOTEBOOK> TODO: notes on the notebook.
+
+Now for ths script. Given a pretrained Music Transformers's `state_dict` and `hparams` saved at `.../save_path.pt`, and specifying the path at which to save a generated MIDI file, `.../gen_audio.mid`, running the following:
+```shell
+python generate.py .../save_path.pt .../gen_audio.mid
+```
+will autoregressively greedy decode the outputs of the Music Transformer to generate a list of token_ids, convert those token_ids back to a MIDI file using functionality from `tokenizer.py`, and will save the output MIDI file at `.../gen_audio.mid`. Parameters for the MIDI generation can also be specified - `'argmax'` or `'categorical'` decode sampling, sampling temperature, the number of top_k samples to consider, and the approximate tempo of the generated audio (for more details, run `python generate.py -h`).
+
+I have uploaded [two small pretrained Music Transformers](https://github.com/spectraldoy/music-transformer/blob/main/models) to this repository, with which anyone can generate music by running the following in a shell from within the repository directory:
+```shell
+python generate.py models/model_name.pt .../gen_audio.mid
+```
+For instance, to generate music with the `model4v2`:
+```shell
+python generate.py models/model4v2.pt .../gen_audio.mid
+```
+I have found that a sampling temperature of 0.95-1.0 and top_k of 80-200 work well with this model. 
+
 ## Preprocess MIDI Data
 Most sequence models require a general upper limit on the length of the sequences being model, it being too computationally or memory expensive to handle longer sequences. So, suppose you have a directory of MIDI files at `.../datapath/` (for instance, any of the folders in the [MAESTRO Dataset](https://magenta.tensorflow.org/datasets/maestro)), and would like to convert these files into an event vocabulary that can be trained on, cut these sequences to be less than or equal to an approximate maximum length, `lth`, and store this processed data in a single PyTorch tensor (for use with `torch.utils.data.TensorDataset`) at `.../processed_data.pt`. Running the `preprocessing.py` script as follows:
 ```shell
@@ -38,10 +57,3 @@ will train the model for the specified number of `epochs` on the given dataset, 
 python train.py .../preprocessed_data.pt .../ckpt_path.pt .../save_path.pt epochs -l
 ```
 the latest checkpoint stored at `.../ckpt_path.pt` will be loaded, overloading any hyperparameters specified with the original hyperparameters of the saved model, restoring the model, optimizer, and learning rate schedule states, and continuing training from there. Once training is completed, i.e., the model has been trained for the specified number of `epochs`, the model's `state_dict` and `hparams` will be stored in a Python dictionary and saved at `.../save_path.pt`.
-
-## Generate Music!
-Of course the Music Transformer is useless if we can't generate music with it. Given a pretrained Music Transformers's `state_dict` and `hparams` saved at `.../save_path.pt`, and specifying the path at which to save a generated MIDI file, `.../gen_audio.mid`, running the following:
-```shell
-python generate.py .../save_path.pt .../gen_audio.mid
-```
-will autoregressively greedy decode the outputs of the Music Transformer to generate a list of token_ids, convert those token_ids back to a MIDI file using functionality from `tokenizer.py`, and will save the output MIDI file at `.../gen_audio.mid`. Parameters for the MIDI generation can also be specified - `'argmax'` or `'categorical'` decode sampling, decode temperature, the number of top_k samples to consider, and the approximate tempo of the generated audio (for more details, run `python generate.py -h`).
