@@ -25,10 +25,10 @@ Functionality to preprocess MIDI files translated into indices in the event voca
 """
 
 
-def sample_data(seqs, lth, factor=6):
+def sample_end_data(seqs, lth, factor=6):
     """
-    Randomly samples sequences of length ~lth from an input set of sequences seqs and adds start and end tokens.
-    Prepares data for augmentation. Returns a list. Deliberately samples from the end so that model learns to end.
+    Randomly samples sequences of length ~lth from an input set of sequences seqs. Prepares data for augmentation.
+    Returns a list. Deliberately samples from the end so that model learns to end.
 
     Args:
         seqs (list): list of sequences in the event vocabulary
@@ -46,6 +46,27 @@ def sample_data(seqs, lth, factor=6):
 
     return data
 
+
+def sample_data(seqs, lth, factor=6):
+    """
+    Randomly samples sequences of length ~lth from an input set of sequences seqs. Prepares data for augmentation.
+    Returns a list.
+
+    Args:
+        seqs (list): list of sequences in the event vocabulary
+        lth (int): approximate length to cut sequences into
+        factor (int): factor to vary range of output lengths; Default: 6. Higher factor will narrow the output range
+
+    Returns:
+        input sequs cut to length ~lth
+    """
+    data = []
+    for seq in seqs:
+        length = randint(lth - lth // factor, lth + lth // factor)
+        idx = randint(0, len(seq) - length + lth // factor)
+        data.append(seq[idx:idx+length])
+        
+    return data
 
 def aug(data, note_shifts=None, time_stretches=None, verbose=False):
     """
