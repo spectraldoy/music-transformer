@@ -165,7 +165,8 @@ class MusicTransformerTrainer:
         data = torch.load(datapath).long().to(device)
 
         # max absolute position must be able to acount for the largest sequence in the data
-        hparams_["max_abs_position"] = max(hparams_["max_abs_position"], data.shape[-1])
+        if hparams_["max_abs_position"] > 0:
+            hparams_["max_abs_position"] = max(hparams_["max_abs_position"], data.shape[-1])
 
         # train / validation split: 80 / 20
         train_len = round(data.shape[0] * 0.8)
