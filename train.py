@@ -404,7 +404,7 @@ if __name__ == "__main__":
 
     # fix optional parameters
     batch_size_ = 32 if args.batch_size is None else args.batch_size
-    warmup_steps_ = 4000 if args.warmup_steps is None else args.warmup_steps
+    warmup_steps_ = 2000 if args.warmup_steps is None else args.warmup_steps
 
     # fix hyperparameters
     hparams["d_model"] = args.d_model if args.d_model else hparams["d_model"]
