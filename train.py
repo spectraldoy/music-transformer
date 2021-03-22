@@ -176,10 +176,10 @@ class MusicTransformerTrainer:
 
         # datasets and dataloaders: split data into first (n-1) and last (n-1) tokens
         self.train_ds = TensorDataset(train_data[:, :-1], train_data[:, 1:])
-        self.train_dl = DataLoader(dataset=self.train_ds, batch_size=batch_size, shuffle=False)
+        self.train_dl = DataLoader(dataset=self.train_ds, batch_size=batch_size, shuffle=True)
 
         self.val_ds = TensorDataset(val_data[:, :-1], val_data[:, 1:])
-        self.val_dl = DataLoader(dataset=self.val_ds, batch_size=batch_size, shuffle=False)
+        self.val_dl = DataLoader(dataset=self.val_ds, batch_size=batch_size, shuffle=True)
 
         # create model
         self.model = MusicTransformer(**hparams_).to(device)
