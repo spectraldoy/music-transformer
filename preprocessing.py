@@ -246,7 +246,10 @@ if __name__ == "__main__":
         DATA = aug(DATA, note_shifts=args.transpositions, time_stretches=args.time_stretches,
                    verbose=(args.verbose >= 2))
         print("Done!") if args.verbose else None
-
+    
+    # shuffle data
+    DATA = DATA[torch.randperm(DATA.shape[0])]
+    
     # save
     print("Saving...") if args.verbose else None
     torch.save(DATA, args.destination)
