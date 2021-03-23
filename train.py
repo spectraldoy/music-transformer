@@ -331,7 +331,6 @@ class MusicTransformerTrainer:
 
 
 if __name__ == "__main__":
-    # command line training of a model
     from hparams import hparams
 
     def check_positive(x):
@@ -389,6 +388,8 @@ if __name__ == "__main__":
                              "passed in value is passed into the dataset, max_abs_position is set to that value not "
                              "the passed in; if loading from checkpoint, this will be overwritten by saved hparams; "
                              "default: 20000", type=int)
+    parser.add_argument("-vs", "--vocab-size",
+                        help="length of the vocabulary in which the input training data has been tokenized. if loading from checkpoint; this will be overwritten by saved hparams; default: 416 (size of Oore et. al vocabulary", type=check_positive)
     parser.add_argument("-nb", "--no-bias",
                         help="flag to not use a bias in the linear layers of the music transformer; if loading from "
                              "checkpoint, this will be overwritten by saved hparams; default: False",
@@ -413,6 +414,7 @@ if __name__ == "__main__":
     hparams["d_ff"] = args.d_feedforward if args.d_feedforward else hparams["d_ff"]
     hparams["max_rel_dist"] = args.max_rel_dist if args.max_rel_dist else hparams["max_rel_dist"]
     hparams["max_abs_position"] = args.max_abs_position if args.max_abs_position else hparams["max_abs_position"]
+    hparams["vocab_size"] = args.vocab_size if args.vocab_size else hparams["vocab_size"]
     hparams["bias"] = args.no_bias
     hparams["dropout"] = args.dropout if args.dropout else hparams["dropout"]
     hparams["layernorm_eps"] = args.layernorm_eps if args.layernorm_eps else hparams["layernorm_eps"]
