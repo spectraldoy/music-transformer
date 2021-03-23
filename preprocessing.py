@@ -1,5 +1,5 @@
 """
-Copyright 2020 Aditya Gomatam.
+Copyright 2021 Aditya Gomatam.
 
 This file is part of music-transformer (https://github.com/spectraldoy/music-transformer), my project to build and
 train a Music Transformer. music-transformer is open-source software licensed under the terms of the GNU General

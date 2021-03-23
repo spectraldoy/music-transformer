@@ -1,5 +1,5 @@
 """
-Copyright 2020 Aditya Gomatam.
+Copyright 2021 Aditya Gomatam.
 
 This file is part of music-transformer (https://github.com/spectraldoy/music-transformer), my project to build and
 train a Music Transformer. music-transformer is open-source software licensed under the terms of the GNU General
@@ -282,7 +282,6 @@ class MusicTransformerTrainer:
         print_interval = epochs // 10 + int(epochs < 10)
         train_losses = []
         val_losses = []
-        checkpointed = False
         start = time.time()
 
         print("Beginning training...")
@@ -321,13 +320,13 @@ class MusicTransformerTrainer:
                     start = time.time()
 
         except KeyboardInterrupt:
-            checkpointed = True
+            pass
 
         print("Checkpointing...")
         self.save()
         print("Done")
 
-        return train_losses, val_losses, checkpointed
+        return train_losses, val_losses
 
 
 if __name__ == "__main__":
@@ -389,7 +388,9 @@ if __name__ == "__main__":
                              "the passed in; if loading from checkpoint, this will be overwritten by saved hparams; "
                              "default: 20000", type=int)
     parser.add_argument("-vs", "--vocab-size",
-                        help="length of the vocabulary in which the input training data has been tokenized. if loading from checkpoint; this will be overwritten by saved hparams; default: 416 (size of Oore et. al vocabulary", type=check_positive)
+                        help="length of the vocabulary in which the input training data has been tokenized. if "
+                             "loading from checkpoint, this will be overwritten by saved hparams; default: 416 (size "
+                             "of Oore et. al MIDI vocabulary)", type=check_positive)
     parser.add_argument("-nb", "--no-bias",
                         help="flag to not use a bias in the linear layers of the music transformer; if loading from "
                              "checkpoint, this will be overwritten by saved hparams; default: False",
@@ -426,14 +427,13 @@ if __name__ == "__main__":
     print()
 
     # train the model
-    tl, vl, ckptd = trainer.fit(args.epochs)
+    trainer.fit(args.epochs)
 
     # done training, save the model
-    if not ckptd:
-        print("Saving...")
-        save_file = {
-            "state_dict": trainer.model.state_dict(),
-            "hparams": trainer.hparams
-        }
-        torch.save(save_file, args.save_path)
-        print("Done!")
+    print("Saving...")
+    save_file = {
+        "state_dict": trainer.model.state_dict(),
+        "hparams": trainer.hparams
+    }
+    torch.save(save_file, args.save_path)
+    print("Done!")
