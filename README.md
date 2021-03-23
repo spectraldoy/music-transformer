@@ -2,7 +2,7 @@
 
 The Music Transformer, or Transformer Decoder with Relative Self-Attention, is a deep learning sequence model designed to generate music. It builds upon the Transformer architecture to consider the relative distances between different elements of the sequence rather than / along with their absolute positions in the sequence. I explored my interest in AI-generated music through this project and learned quite a bit about current research in the field of AI in terms of both algorithms and architectures. This repository contains Python scripts to build and train a pre-LayerNorm Music Transformer using PyTorch, as well as to generate MIDI files with a trained (or if you're brave, untrained) Music Transformer. It also contains two of my own trained Music Transformers that can be used to generate music.
 
-While the data preprocessing and generation functionality require MIDI files and the event vocabulary described in [Oore et al. 2018](https://arxiv.org/pdf/1808.03715.pdf) or [`vocabulary.py`](https://github.com/spectraldoy/music-transformer/blob/main/vocabulary.py), anyone should be able to use the `train.py` script to train their own Relative Attention Transformer on any dataset, provided the correct hyperparameters, and provided they have properly preprocessed their data into a single PyTorch tensor. Do create an issue if something does not work as expected.
+While the data preprocessing and generation functionality require MIDI files and the event vocabulary described in [Oore et al. 2018](https://arxiv.org/pdf/1808.03715.pdf) or `vocabulary.py`, anyone should be able to use the `train.py` script to train their own Relative Attention Transformer on any dataset, provided the correct hyperparameters, and provided they have properly preprocessed their data into a single PyTorch tensor. Do create an issue if something does not work as expected.
 
 Refer to [On_the_Music_Transformer.pdf](https://github.com/spectraldoy/music-transformer/blob/main/On_the_Music_Transformer.pdf) (IN PROGRESS) for details and notes on how the Relative Self-Attention mechanism of the Music Transformer works.
 
@@ -30,12 +30,12 @@ python generate.py .../save_path.pt .../gen_audio.mid
 will autoregressively greedy decode the outputs of the Music Transformer to generate a list of token_ids, convert those token_ids back to a MIDI file using functionality from `tokenizer.py`, and will save the output MIDI file at `.../gen_audio.mid`. Parameters for the MIDI generation can also be specified - `'argmax'` or `'categorical'` decode sampling, sampling temperature, the number of top_k samples to consider, and the approximate tempo of the generated audio (for more details, run `python generate.py -h`).
 
 I have uploaded [three small pretrained Music Transformers](https://github.com/spectraldoy/music-transformer/blob/main/models) to this repository, with which anyone can run this script to generate music. The models are:
-1. `model4v2`, containing absolute positional encoding up to 20000 positions and otherwise the exact `hparams` of [`hparams.py`](https://github.com/spectraldoy/music-transformer/blob/main/hparams.py), and trained on about 100 MIDI files from the [MAESTRO Dataset](https://magenta.tensorflow.org/datasets/maestro). 
-2. `model6v2`, containing no absolute positional encoding (i.e., being a pure Relative Attention model) and the exact `hparams` of [`hparams.py`](https://github.com/spectraldoy/music-transformer/blob/main/hparams.py), and trained on the same set of MIDI files as `model4v2`.
-3. `chopintransformerv5`, a pure relative attention model, having the exact `hparams` of [`hparams.py`](https://github.com/spectraldoy/music-transformer/blob/main/hparams.py), and being trained on a set of 39 pieces by Chopin. However, it sounds nothing like him.
+1. `model4v2`, containing absolute positional encoding up to 20000 positions and otherwise the exact `hparams` of `hparams.py`, and trained on about 100 MIDI files from the [MAESTRO Dataset](https://magenta.tensorflow.org/datasets/maestro). 
+2. `model6v2`, containing no absolute positional encoding (i.e., being a pure Relative Attention model) and the exact `hparams` of `hparams.py`, and trained on the same set of MIDI files as `model4v2`.
+3. `chopintransformerv5`, a pure relative attention model, having the exact `hparams` of `hparams.py`, and being trained on a set of 39 pieces by Chopin. However, it sounds nothing like him.
 To generate music with the `chopintransformerv5`, you can run:
 ```shell
-python generate.py models/chopintransformerv5.pt .../gen_audio.mid
+python generate.py models/chopintransformerv5.pt .../gen_audio.mid -v
 ```
 I have found that a sampling temperature of 0.7-1.0 and top_k of 50-200 work well with this model. Sometimes, however, it doesn't end.
 
