@@ -21,9 +21,7 @@ pip install -r requirements.txt
 ```
 
 ## Generate Music!
-Of course the Music Transformer is useless if we can't generate music with it. The notebook <TODO:NOTEBOOK> TODO: notes on the notebook.
-
-Now for the script. Given a pretrained Music Transformers's `state_dict` and `hparams` saved at `.../save_path.pt`, and specifying the path at which to save a generated MIDI file, `.../gen_audio.mid`, running the following:
+Of course the Music Transformer is useless if we can't generate music with it. Given a pretrained Music Transformers's `state_dict` and `hparams` saved at `.../save_path.pt`, and specifying the path at which to save a generated MIDI file, `.../gen_audio.mid`, running the following:
 ```shell
 python generate.py .../save_path.pt .../gen_audio.mid
 ```
@@ -38,6 +36,8 @@ To generate music with the `chopintransformerv5`, you can run:
 python generate.py models/chopintransformerv5.pt .../gen_audio.mid -v
 ```
 I have found that a sampling temperature of 0.7-1.0 and top_k of 50-200 work well with this model. Sometimes, however, it doesn't end.
+
+The notebook [Generate_Music.ipynb](https://github.com/spectraldoy/music-transformer/blob/main/Generate_Music.ipynb) allows you to generate music with the models in this repository (by default the Chopin model), as well as download any generated audio files, without having to write any underlying code. So for those who wish to play around with these models, go ahead and open that notebook in Google Colab.
 
 ## Preprocess MIDI Data
 Most sequence models require a general upper limit on the length of the sequences being model, it being too computationally or memory expensive to handle longer sequences. So, suppose you have a directory of MIDI files at `.../datapath/` (for instance, any of the folders in the [MAESTRO Dataset](https://magenta.tensorflow.org/datasets/maestro)), and would like to convert these files into an event vocabulary that can be trained on, cut these sequences to be less than or equal to an approximate maximum length, `lth`, and store this processed data in a single PyTorch tensor (for use with `torch.utils.data.TensorDataset`) at `.../processed_data.pt`. Running the `preprocessing.py` script as follows:
