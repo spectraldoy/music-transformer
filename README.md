@@ -30,7 +30,8 @@ will autoregressively greedy decode the outputs of the Music Transformer to gene
 I have uploaded [three small pretrained Music Transformers](https://github.com/spectraldoy/music-transformer/blob/main/models) to this repository, with which anyone can run this script to generate music. The models are:
 1. `model4v2`, containing absolute positional encoding up to 20000 positions and otherwise the exact `hparams` of `hparams.py`, and trained on about 100 MIDI files from the [MAESTRO Dataset](https://magenta.tensorflow.org/datasets/maestro). 
 2. `model6v2`, containing no absolute positional encoding (i.e., being a pure Relative Attention model) and the exact `hparams` of `hparams.py`, and trained on the same set of MIDI files as `model4v2`.
-3. `chopintransformerv5`, a pure relative attention model, having the exact `hparams` of `hparams.py`, and being trained on a set of 39 pieces by Chopin. However, it sounds nothing like him.
+3. `chopintransformerv5`, a pure relative attention model, having the exact `hparams` of `hparams.py`, and being trained on a set of 39 pieces by Chopin. However, it sounds nothing like him. This is arguably my best model.
+
 To generate music with the `chopintransformerv5`, you can run:
 ```shell
 python generate.py models/chopintransformerv5.pt .../gen_audio.mid -v
