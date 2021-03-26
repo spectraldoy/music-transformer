@@ -178,8 +178,7 @@ class MultiHeadAttention(nn.Module):
 
         # reshape and transpose x
         x = x.view(*x.shape[:-1], num_heads, depth)     # (..., L, num_heads, depth)
-        x = x.transpose(-2, -3)                         # (..., num_heads, L, depth)
-        return x
+        return x.transpose(-2, -3)                      # (..., num_heads, L, depth)
 
     def get_required_embeddings(self, seq_len, max_len=None):
         """
@@ -203,12 +202,11 @@ class MultiHeadAttention(nn.Module):
         # required relative position embeddings
         E_dev = self.E.weight.device
         first_emb = self.E(torch.arange(0, 1, device=E_dev)).clone()
-        out = torch.cat(
+        return torch.cat(
             [*[first_emb.clone() for _ in range(max(seq_len - max_len, 0))],
              self.E(torch.arange(max(max_len - seq_len, 0), max_len, device=E_dev))],
             dim=0
         )
-        return out
 
     def forward(self, q, k, v, mask=None):
         """
