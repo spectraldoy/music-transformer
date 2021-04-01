@@ -53,7 +53,7 @@ NOTE: THIS SCRIPT WILL NOT WORK PROPERLY FOR MULTI-TRACK MIDI FILES, AND ANY OTH
 (the reason for this is that I worked only with single-track piano MIDI for this project)
 
 ## Train a Music Transformer
-Being a ridiculously large model, requiring inordinate amounts of time to train on both GPUs as well as TPUs, the Music Transformer needs to be checkpointed while training. I implemented a deliberate and slightly unwieldy checkpointing mechanism in the `MusicTransformerTrainer` class from `train.py`, to be able to checkpoint while training a Music Transformer. At it's very simplest, given a path to a preprocessed dataset in the form of a PyTorch tensor, `.../preprocessed_data.pt`, and specifying a path at which to checkpoint the model, `.../ckpt_path.pt`, a path at which to save the model, `.../save_path.pt`, and the number of epochs for which to train the model for this session, `epochs`, running the following:
+Being highly space complex, as well as requiring inordinate amounts of time to train on both GPUs as well as TPUs, the Music Transformer needs to be checkpointed while training. I implemented a deliberate and slightly unwieldy checkpointing mechanism in the `MusicTransformerTrainer` class from `train.py`, to be able to checkpoint while training a Music Transformer. At it's very simplest, given a path to a preprocessed dataset in the form of a PyTorch tensor, `.../preprocessed_data.pt`, and specifying a path at which to checkpoint the model, `.../ckpt_path.pt`, a path at which to save the model, `.../save_path.pt`, and the number of epochs for which to train the model for this session, `epochs`, running the following:
 ```shell
 python train.py .../preprocessed_data.pt .../ckpt_path.pt .../save_path.pt epochs
 ```
