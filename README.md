@@ -2,9 +2,9 @@
 
 The Music Transformer, or Transformer Decoder with Relative Self-Attention, is a deep learning sequence model designed to generate music. It builds upon the Transformer architecture to consider the relative distances between different elements of the sequence rather than / along with their absolute positions in the sequence. I explored my interest in AI-generated music through this project and learned quite a bit about current research in the field of AI in terms of both algorithms and architectures. This repository contains Python scripts to build and train a pre-LayerNorm Music Transformer using PyTorch, as well as to generate MIDI files with a trained (or if you're brave, untrained) Music Transformer. It also contains two of my own trained Music Transformers that can be used to generate music.
 
-Follow the instructions in the [Generate_Music.ipynb](https://github.com/spectraldoy/music-transformer/blob/main/Generate_Music.ipynb) notebook, or in the [Generate Music!](#generate-music) section of this README to generate your own music with one of my pretrained Music Transformers possibly without having to write any code!
-
 While the data preprocessing and generation functionality require MIDI files and the event vocabulary described in [Oore et al. 2018](https://arxiv.org/pdf/1808.03715.pdf) or `vocabulary.py`, anyone should be able to use the `train.py` script to train their own Relative Attention Transformer on any dataset, provided correct specification of hyperparameters, and provided they have properly preprocessed their data into a single PyTorch tensor. Do create an issue if something does not work as expected.
+
+Follow the instructions in the [Generate_Music.ipynb](https://github.com/spectraldoy/music-transformer/blob/main/Generate_Music.ipynb) notebook, or in the [Generate Music!](#generate-music) section of this README to generate your own music with one of my pretrained Music Transformers possibly without having to write any code!
 
 Refer to [On_the_Music_Transformer.pdf](https://github.com/spectraldoy/music-transformer/blob/main/On_the_Music_Transformer.pdf) (IN PROGRESS) for details and notes on how the Relative Self-Attention mechanism of the Music Transformer works.
 
