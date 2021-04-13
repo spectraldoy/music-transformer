@@ -6,8 +6,6 @@ While the data preprocessing and generation functionality require MIDI files and
 
 Follow the instructions in the [Generate_Music.ipynb](https://github.com/spectraldoy/music-transformer/blob/main/Generate_Music.ipynb) notebook, or in the [Generate Music!](#generate-music) section of this README to generate your own music with one of my pretrained Music Transformers possibly without having to write any code!
 
-Refer to [On_the_Music_Transformer.pdf](https://github.com/spectraldoy/music-transformer/blob/main/On_the_Music_Transformer.pdf) (IN PROGRESS) for details and notes on how the Relative Self-Attention mechanism of the Music Transformer works.
-
 Note that in this README `...` in a path name is used to denote the rest of the full path to a file or directory, not 2 directories above.
 
 ## Key Dependencies
