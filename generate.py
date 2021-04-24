@@ -24,6 +24,31 @@ Functionality to use Music-Transformer model after (or during) training to gener
 """
 
 
+def load_model(filepath):
+    """
+    Load a MusicTransformer from a saved pytorch state_dict and hparams. The input filepath should point to a .pt
+    file in which has been saved a dictionary containing the model state dict and hparams, ex:
+    torch.save(filepath, {
+        "state_dict": MusicTransformer.state_dict(),
+        "hparams": hparams (dict)
+    })
+
+    Args:
+        filepath (str): path to single .pt file containing the dictionary as described above
+
+    Returns:
+        the loaded MusicTransformer model
+    """
+    file = torch.load(filepath)
+    if "hparams" not in file:
+        file["hparams"] = hparams
+
+    model = MusicTransformer(**file["hparams"]).to(device)
+    model.load_state_dict(file["state_dict"])
+    model.eval()
+    return model
+
+
 def greedy_decode(model, inp, mode="categorical", temperature=1.0, k=None):
     """
     The transformer is an autoregressive model, which means that at the inference stage, it makes next predictions
@@ -218,30 +243,6 @@ if __name__ == "__main__":
         if x <= 0:
             raise argparse.ArgumentTypeError(f"{x} is not a positive integer")
         return x
-
-    def load_model(filepath):
-        """
-        Load a MusicTransformer from a saved pytorch state_dict and hparams. The input filepath should point to a .pt
-        file in which has been saved a dictionary containing the model state dict and hparams, ex:
-        torch.save(filepath, {
-            "state_dict": MusicTransformer.state_dict(),
-            "hparams": hparams (dict)
-        })
-
-        Args:
-            filepath (str): path to single .pt file containing the dictionary as described above
-
-        Returns:
-            the loaded MusicTransformer model
-        """
-        file = torch.load(filepath)
-        if "hparams" not in file:
-            file["hparams"] = hparams
-
-        model = MusicTransformer(**file["hparams"]).to(device)
-        model.load_state_dict(file["state_dict"])
-        model.eval()
-        return model
 
     parser = argparse.ArgumentParser(
         prog="generate.py",
