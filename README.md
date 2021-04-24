@@ -4,9 +4,7 @@ The [Music Transformer](https://arxiv.org/abs/1809.04281), or Transformer Decode
 
 While the data preprocessing and generation functionality require MIDI files and the event vocabulary described in [Oore et al. 2018](https://arxiv.org/pdf/1808.03715.pdf) or `vocabulary.py`, anyone should be able to use the `train.py` script to train their own Relative Attention Transformer on any dataset, provided correct specification of hyperparameters, and provided they have properly preprocessed their data into a single PyTorch tensor. Do create an issue if something does not work as expected.
 
-Follow the instructions in the [Generate_Music.ipynb](https://github.com/spectraldoy/music-transformer/blob/main/Generate_Music.ipynb) notebook, or in the [Generate Music!](#generate-music) section of this README to generate your own music with one of my pretrained Music Transformers possibly without having to write any code!
-
-Note that in this README `...` in a path name is used to denote the rest of the full path to a file or directory, not 2 directories above.
+Follow the instructions in the [Generate_Music.ipynb](https://github.com/spectraldoy/music-transformer/blob/main/Generate_Music.ipynb) notebook, or in the [Generate Music!](#generate-music) section of this README to generate your own music with one of my pretrained Music Transformers possibly without having to write any code.
 
 ## Key Dependencies
 1. PyTorch ~1.7.1
