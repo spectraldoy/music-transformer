@@ -24,7 +24,7 @@ Total midi events = 413
 
 Indices in the vocabulary:
 v[       0] = '<pad>'
-v[  0..128] = note_on
+v[  1..128] = note_on
 v[129..256] = note_off
 v[257..381] = time_shift
 v[382..413] = velocity
