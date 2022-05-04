@@ -40,6 +40,7 @@ def load_model(filepath):
         the loaded MusicTransformer model
     """
     from model import MusicTransformer
+    from hparams import hparams
     
     file = torch.load(filepath)
     if "hparams" not in file:
