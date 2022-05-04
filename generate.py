@@ -39,6 +39,8 @@ def load_model(filepath):
     Returns:
         the loaded MusicTransformer model
     """
+    from model import MusicTransformer
+    
     file = torch.load(filepath)
     if "hparams" not in file:
         file["hparams"] = hparams
@@ -233,7 +235,6 @@ def generate(model_, inp, save_path="./bloop.mid", mode="categorical", temperatu
 
 
 if __name__ == "__main__":
-    from model import MusicTransformer
     from hparams import hparams
 
     def check_positive(x):
