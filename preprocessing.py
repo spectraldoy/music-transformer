@@ -19,6 +19,7 @@ from random import randint, sample
 from sys import exit
 from vocabulary import *
 from tokenizer import *
+import glob
 
 """
 Functionality to preprocess MIDI files translated into indices in the event vocabulary from command line
@@ -227,11 +228,12 @@ if __name__ == "__main__":
     # load parsed midi files
     if not args.from_augmented_data:
         print("Translating midi files to event vocabulary (NOTE: may take a while)...") if args.verbose else None
-        for file in os.listdir(PATH):
+        for file in glob.iglob(PATH + '**/*.mid*', recursive=True):
+            print(file) if args.verbose else None
             try:
-                idx_list = midi_parser(fname=PATH + file)[0]
+                idx_list = midi_parser(fname=file)[0]
                 DATA.append(idx_list)
-            except OSError:
+            except (OSError, ValueError, EOFError, IndexError, TypeError, KeyError, RuntimeError, AttributeError):
                 pass
         print("Done!") if args.verbose else None
 

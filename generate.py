@@ -48,6 +48,7 @@ def load_model(filepath):
 
     model = MusicTransformer(**file["hparams"]).to(device)
     model.load_state_dict(file["state_dict"])
+    model = torch.compile(model)
     model.eval()
     return model
 
@@ -102,6 +103,7 @@ def greedy_decode(model, inp, mode="categorical", temperature=1.0, k=None):
             return k__
 
     # autoregressively generate output
+    torch.set_float32_matmul_precision("high")
     try:
         with torch.no_grad():
             while True:
@@ -253,6 +255,7 @@ if __name__ == "__main__":
     parser.add_argument("path_to_model", help="string path to a .pt file at which has been saved a dictionary "
                                               "containing the model state dict and hyperparameters", type=str)
     parser.add_argument("save_path", help="path at which to save the generated midi file", type=str)
+    
     parser.add_argument("-m", "--mode", help="specify 'categorical' or 'argmax' mode of decode sampling", type=str)
     parser.add_argument("-k", "--top-k", help="top k samples to consider while decode sampling; default: all",
                         type=check_positive)
@@ -262,6 +265,9 @@ if __name__ == "__main__":
                              "model output)",
                         type=float)
     parser.add_argument("-tm", "--tempo", help="approximate tempo of generated sample in BMP", type=check_positive)
+    parser.add_argument("-f", "--midi_input_file", help="Start the muisic off with a midi file", type=str)
+    parser.add_argument("-ft", "--midi_file_tokens", help="How many tokens are samples from the midi file", type=int)
+
     """
     parser.add_argument("-w", "--save-wav", help="flag to save a wav file along with the generated midi file",
                         action="store_true")
@@ -278,6 +284,14 @@ if __name__ == "__main__":
     k_ = int(args.top_k) if args.top_k else None
     tempo_ = int(60 * 1e6 / int(args.tempo)) if args.tempo else 512820
 
+    if args.midi_input_file:
+        midi_parser_output = midi_parser(args.midi_input_file)
+        tempo_ = midi_parser_output[2]
+        midi_input_file = (midi_parser_output[1])[0:args.midi_file_tokens] if args.midi_file_tokens else midi_parser_output[1]
+          
+    else:
+      midi_input_file = ["<start>"]
+    
     music_transformer = load_model(args.path_to_model)
-    generate(model_=music_transformer, inp=["<start>"], save_path=args.save_path,
+    generate(model_=music_transformer, inp=midi_input_file, save_path=args.save_path,
              temperature=temperature_, mode=mode_, k=k_, tempo=tempo_, verbose=args.verbose)

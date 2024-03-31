@@ -11,11 +11,11 @@ See the GNU General Public License for more details. A copy of this license can 
 for music-transformer, or at https://www.gnu.org/licenses/gpl-3.0.html.
 """
 
-from torch import cuda, device as d
+from torch import torch, device as d
 from vocabulary import vocab_size
 
 # get device
-if cuda.is_available():
+if torch.backends.cuda.is_built():
     dev = "cuda:0"
 else:
     dev = "cpu"
