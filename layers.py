@@ -143,6 +143,7 @@ class MultiHeadAttention(nn.Module):
         self.num_heads = num_heads
         self.d_model = d_model
         self.max_rel_dist = max_rel_dist
+        self.batch_first = False
 
         if d_model % num_heads != 0:
             raise ValueError("d_model must be divisible into num_heads heads")
@@ -300,7 +301,7 @@ class DecoderLayer(nn.Module):
         self.num_heads = num_heads
         self.max_rel_idst = max_rel_dist
 
-        self.mha = MultiHeadAttention(d_model, num_heads, max_rel_dist, bias)
+        self.self_attn = MultiHeadAttention(d_model, num_heads, max_rel_dist, bias)
         self.ffn = PointwiseFFN(d_model, d_ff, bias)
 
         self.layernorm1 = nn.LayerNorm(normalized_shape=d_model, eps=layernorm_eps)
@@ -310,7 +311,8 @@ class DecoderLayer(nn.Module):
         self.dropout2 = nn.Dropout(dropout)
 
     def forward(self, tgt, memory=None, tgt_mask=None,
-                memory_mask=None, tgt_key_padding_mask=None, memory_key_padding_mask=None):
+                memory_mask=None, tgt_key_padding_mask=None, memory_key_padding_mask=None, 
+                tgt_is_causal=None, memory_is_causal=None):
         """
         Forward pass through decoder layer. Designed to be able to use torch's nn.TransformerDecoder as the final model,
         which is why memory and all parameters after tgt_mask are present but are unused.
@@ -325,7 +327,7 @@ class DecoderLayer(nn.Module):
         """
         # multi-head attention block
         attn_out = self.layernorm1(tgt)
-        attn_out = self.mha(attn_out, attn_out, attn_out, mask=tgt_mask)
+        attn_out = self.self_attn(attn_out, attn_out, attn_out, mask=tgt_mask)
         attn_out = self.dropout1(attn_out)
         attn_out = tgt + attn_out
 

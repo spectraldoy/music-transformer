@@ -41,7 +41,10 @@ def midi_parser(fname=None, mid=None):
 
     # load midi file
     if fname is not None:
-        mid = mido.MidiFile(fname)
+        try:
+            mid = mido.MidiFile(fname)
+        except mido.midifiles.meta.KeySignatureError as e:
+            raise ValueError(e)
 
     # things needed for conversion
     delta_time = 0          # time between important midi messages
@@ -50,6 +53,7 @@ def midi_parser(fname=None, mid=None):
     pedal_events = {}       # dict to handle pedal events
     pedal_flag = False      # flag to handle pedal events
 
+    tempo = 0               # tempo of midi file
     # translate midi file to event list
     for track in mid.tracks:
         for msg in track:
@@ -58,6 +62,8 @@ def midi_parser(fname=None, mid=None):
 
             # meta events are irrelevant
             if msg.is_meta:
+                if (msg.type == "set_tempo") and (tempo == 0):
+                    tempo = msg.tempo
                 continue
 
             # process by message type
@@ -126,7 +132,7 @@ def midi_parser(fname=None, mid=None):
             index_list.append(idx)
 
     # return the lists of events
-    return LongTensor(index_list), event_list
+    return LongTensor(index_list), event_list, tempo
 
 
 def list_parser(index_list=None, event_list=None, fname="bloop", tempo=512820):

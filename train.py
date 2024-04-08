@@ -183,7 +183,7 @@ class MusicTransformerTrainer:
         self.val_dl = DataLoader(dataset=self.val_ds, batch_size=batch_size, shuffle=True)
 
         # create model
-        self.model = MusicTransformer(**hparams_).to(device)
+        self.model = MusicTransformer(**hparams_).to(device) 
         self.hparams = hparams_
 
         # setup training
@@ -279,26 +279,28 @@ class MusicTransformerTrainer:
         Returns:
             history of training and validation losses for this training session
         """
-        print_interval = epochs // 10 + int(epochs < 10)
         train_losses = []
         val_losses = []
         start = time.time()
 
         print("Beginning training...")
+        print(time.strftime("%Y-%m-%d %H:%M"))
+        model = torch.compile(self.model)
+        torch.set_float32_matmul_precision("high") # this speeds up traning
 
         try:
             for epoch in range(epochs):
                 train_epoch_losses = []
                 val_epoch_losses = []
 
-                self.model.train()
+                model.train()
                 for train_inp, train_tar in self.train_dl:
-                    loss = train_step(self.model, self.optimizer, self.scheduler, train_inp, train_tar)
+                    loss = train_step(model, self.optimizer, self.scheduler, train_inp, train_tar)
                     train_epoch_losses.append(loss)
 
-                self.model.eval()
+                model.eval()
                 for val_inp, val_tar in self.val_dl:
-                    loss = val_step(self.model, val_inp, val_tar)
+                    loss = val_step(model, val_inp, val_tar)
                     val_epoch_losses.append(loss)
 
                 # mean losses for the epoch
@@ -311,13 +313,9 @@ class MusicTransformerTrainer:
                 self.val_losses.append(val_mean)
                 val_losses.append(val_mean)
 
-                if ((epoch + 1) % print_interval) == 0:
-                    print(f"Epoch {epoch + 1} Time taken {round(time.time() - start, 2)} seconds "
-                          f"Train Loss {train_losses[-1]} Val Loss {val_losses[-1]}")
-                    # print("Checkpointing...")
-                    # self.save()
-                    # print("Done")
-                    start = time.time()
+                print(f"Epoch {epoch } Time taken {round(time.time() - start, 2)} seconds "
+                    f"Train Loss {train_losses[-1]} Val Loss {val_losses[-1]}")
+                start = time.time()
 
         except KeyboardInterrupt:
             pass
@@ -325,6 +323,7 @@ class MusicTransformerTrainer:
         print("Checkpointing...")
         self.save()
         print("Done")
+        print(time.strftime("%Y-%m-%d %H:%M"))
 
         return train_losses, val_losses
 
