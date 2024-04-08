@@ -233,7 +233,8 @@ if __name__ == "__main__":
             try:
                 idx_list = midi_parser(fname=file)[0]
                 DATA.append(idx_list)
-            except (OSError, ValueError, EOFError, IndexError, TypeError, KeyError, RuntimeError, AttributeError):
+            except (OSError, ValueError, EOFError) as ex:
+                print(f"{type(ex).__name__} was raised: {ex}")
                 pass
         print("Done!") if args.verbose else None
 

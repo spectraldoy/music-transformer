@@ -265,8 +265,10 @@ if __name__ == "__main__":
                              "model output)",
                         type=float)
     parser.add_argument("-tm", "--tempo", help="approximate tempo of generated sample in BMP", type=check_positive)
-    parser.add_argument("-f", "--midi_input_file", help="Start the muisic off with a midi file", type=str)
-    parser.add_argument("-ft", "--midi_file_tokens", help="How many tokens are samples from the midi file", type=int)
+    parser.add_argument("-i", "--midi-prompt", help="if specified, the program will "
+                        "generate music that continues the input midi file", type=str)
+    parser.add_argument("-it", "--midi-prompt-tokens", help="number of tokens to sample "
+                        "from the midi-prompt input as a prefix to continue, if it has been specified", type=int)
 
     """
     parser.add_argument("-w", "--save-wav", help="flag to save a wav file along with the generated midi file",
@@ -284,14 +286,13 @@ if __name__ == "__main__":
     k_ = int(args.top_k) if args.top_k else None
     tempo_ = int(60 * 1e6 / int(args.tempo)) if args.tempo else 512820
 
-    if args.midi_input_file:
-        midi_parser_output = midi_parser(args.midi_input_file)
+    if args.midi_prompt:
+        midi_parser_output = midi_parser(args.midi_prompt)
         tempo_ = midi_parser_output[2]
-        midi_input_file = (midi_parser_output[1])[0:args.midi_file_tokens] if args.midi_file_tokens else midi_parser_output[1]
-          
+        midi_input = (midi_parser_output[1])[0:args.midi_prompt_tokens] if args.midi_prompt_tokens else midi_parser_output[1]
     else:
-      midi_input_file = ["<start>"]
+      midi_input = ["<start>"]
     
     music_transformer = load_model(args.path_to_model)
-    generate(model_=music_transformer, inp=midi_input_file, save_path=args.save_path,
+    generate(model_=music_transformer, inp=midi_input, save_path=args.save_path,
              temperature=temperature_, mode=mode_, k=k_, tempo=tempo_, verbose=args.verbose)

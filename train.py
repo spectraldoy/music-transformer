@@ -183,8 +183,7 @@ class MusicTransformerTrainer:
         self.val_dl = DataLoader(dataset=self.val_ds, batch_size=batch_size, shuffle=True)
 
         # create model
-        model = MusicTransformer(**hparams_).to(device) 
-        self.model = torch.compile(model)
+        self.model = MusicTransformer(**hparams_).to(device) 
         self.hparams = hparams_
 
         # setup training
@@ -286,6 +285,7 @@ class MusicTransformerTrainer:
 
         print("Beginning training...")
         print(time.strftime("%Y-%m-%d %H:%M"))
+        model = torch.compile(self.model)
         torch.set_float32_matmul_precision("high") # this speeds up traning
 
         try:
@@ -293,14 +293,14 @@ class MusicTransformerTrainer:
                 train_epoch_losses = []
                 val_epoch_losses = []
 
-                self.model.train()
+                model.train()
                 for train_inp, train_tar in self.train_dl:
-                    loss = train_step(self.model, self.optimizer, self.scheduler, train_inp, train_tar)
+                    loss = train_step(model, self.optimizer, self.scheduler, train_inp, train_tar)
                     train_epoch_losses.append(loss)
 
-                self.model.eval()
+                model.eval()
                 for val_inp, val_tar in self.val_dl:
-                    loss = val_step(self.model, val_inp, val_tar)
+                    loss = val_step(model, val_inp, val_tar)
                     val_epoch_losses.append(loss)
 
                 # mean losses for the epoch
@@ -315,9 +315,6 @@ class MusicTransformerTrainer:
 
                 print(f"Epoch {epoch } Time taken {round(time.time() - start, 2)} seconds "
                     f"Train Loss {train_losses[-1]} Val Loss {val_losses[-1]}")
-                # print("Checkpointing...")
-                # self.save()
-                # print("Done")
                 start = time.time()
 
         except KeyboardInterrupt:
