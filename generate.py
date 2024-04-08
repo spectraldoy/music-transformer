@@ -24,7 +24,7 @@ Functionality to use Music-Transformer model after (or during) training to gener
 """
 
 
-def load_model(filepath):
+def load_model(filepath, compile = False):
     """
     Load a MusicTransformer from a saved pytorch state_dict and hparams. The input filepath should point to a .pt
     file in which has been saved a dictionary containing the model state dict and hparams, ex:
@@ -35,20 +35,25 @@ def load_model(filepath):
 
     Args:
         filepath (str): path to single .pt file containing the dictionary as described above
+        compile (bool): whether or not to compile the model after loading, as compiled models
+            sometimes raise warnings during execution
 
     Returns:
         the loaded MusicTransformer model
     """
     from model import MusicTransformer
-    from hparams import hparams
+    from hparams import hparams, device
     
-    file = torch.load(filepath)
+    file = torch.load(filepath, map_location=device)
     if "hparams" not in file:
         file["hparams"] = hparams
 
     model = MusicTransformer(**file["hparams"]).to(device)
     model.load_state_dict(file["state_dict"])
-    model = torch.compile(model)
+
+    if compile:
+        model = torch.compile(model)
+
     model.eval()
     return model
 
@@ -256,6 +261,8 @@ if __name__ == "__main__":
                                               "containing the model state dict and hyperparameters", type=str)
     parser.add_argument("save_path", help="path at which to save the generated midi file", type=str)
     
+    parser.add_argument("-c", "--compile", help="if true, model will be `torch.compile`d for potentially better "
+                                                "speed; default: false", action="store_true")
     parser.add_argument("-m", "--mode", help="specify 'categorical' or 'argmax' mode of decode sampling", type=str)
     parser.add_argument("-k", "--top-k", help="top k samples to consider while decode sampling; default: all",
                         type=check_positive)
@@ -269,13 +276,6 @@ if __name__ == "__main__":
                         "generate music that continues the input midi file", type=str)
     parser.add_argument("-it", "--midi-prompt-tokens", help="number of tokens to sample "
                         "from the midi-prompt input as a prefix to continue, if it has been specified", type=int)
-
-    """
-    parser.add_argument("-w", "--save-wav", help="flag to save a wav file along with the generated midi file",
-                        action="store_true")
-    parser.add_argument("-f", "--save-flac", help="flag to save a flac file along with the generated midi file",
-                        action="store_true")
-    """
     parser.add_argument("-v", "--verbose", help="verbose output flag", action="store_true")
 
     args = parser.parse_args()
@@ -293,6 +293,6 @@ if __name__ == "__main__":
     else:
       midi_input = ["<start>"]
     
-    music_transformer = load_model(args.path_to_model)
+    music_transformer = load_model(args.path_to_model, args.compile)
     generate(model_=music_transformer, inp=midi_input, save_path=args.save_path,
              temperature=temperature_, mode=mode_, k=k_, tempo=tempo_, verbose=args.verbose)
