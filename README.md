@@ -25,7 +25,7 @@ python generate.py .../save_path.pt .../gen_audio.mid
 ```
 will autoregressively greedy decode the outputs of the Music Transformer to generate a list of token_ids, convert those token_ids back to a MIDI file using functionality from `tokenizer.py`, and will save the output MIDI file at `.../gen_audio.mid`. Parameters for the MIDI generation can also be specified - `'argmax'` or `'categorical'` decode sampling, sampling temperature, the number of top_k samples to consider, and the approximate tempo of the generated audio (for more details, run `python generate.py -h`).
 
-I have uploaded [three small pretrained Music Transformers](https://github.com/spectraldoy/music-transformer/blob/main/models) to this repository, with which anyone can run this script to generate music. The models are:
+I have uploaded [a few small pretrained Music Transformers](https://github.com/spectraldoy/music-transformer/blob/main/models) to this repository, with which anyone can run this script to generate music. The models are:
 1. `model4v2`, containing absolute positional encoding up to 20000 positions and otherwise the exact `hparams` of `hparams.py`, and trained on about 100 MIDI files from the [MAESTRO Dataset](https://magenta.tensorflow.org/datasets/maestro). 
 2. `model6v2`, containing no absolute positional encoding (i.e., being a pure Relative Attention model) and the exact `hparams` of `hparams.py`, and trained on the same set of MIDI files as `model4v2`.
 3. `chopintransformerv5`, a pure relative attention model, having the exact `hparams` of `hparams.py`, and being trained on a set of 39 pieces by Chopin. However, it sounds nothing like him. This is arguably my best model.
