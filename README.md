@@ -7,7 +7,7 @@ While the data preprocessing and generation functionality require MIDI files and
 Follow the instructions in the [Generate_Music.ipynb](https://github.com/spectraldoy/music-transformer/blob/main/Generate_Music.ipynb) notebook, or in the [Generate Music!](#generate-music) section of this README to generate your own music with one of my pretrained Music Transformers possibly without having to write any code.
 
 ## Key Dependencies
-1. PyTorch 2.1.1
+1. PyTorch 2.1.0
 2. Mido 1.2.9
 
 ## Setting up
