@@ -29,7 +29,7 @@ I have uploaded [a few small pretrained Music Transformers](https://github.com/s
 1. `model4v2`, containing absolute positional encoding up to 20000 positions and otherwise the exact `hparams` of `hparams.py`, and trained on about 100 MIDI files from the [MAESTRO Dataset](https://magenta.tensorflow.org/datasets/maestro). 
 2. `model6v2`, containing no absolute positional encoding (i.e., being a pure Relative Attention model) and the exact `hparams` of `hparams.py`, and trained on the same set of MIDI files as `model4v2`.
 3. `chopintransformerv5`, a pure relative attention model, having the exact `hparams` of `hparams.py`, and being trained on a set of 39 pieces by Chopin. However, it sounds nothing like him. This is arguably my best model.
-4. `vgmtransformerv2.pt`, having the exact `hparams` of `hparams.py` and being trained on the `Soundtracks/Video Game Music` folder of the [ADL Piano MIDI Dataset](https://github.com/lucasnfe/adl-piano-midi/). 
+4. `vgmtransformerv4.pt`, having the exact `hparams` of `hparams.py` and being trained on the `Soundtracks/Video Game Music` folder of the [ADL Piano MIDI Dataset](https://github.com/lucasnfe/adl-piano-midi/). 
 
 To generate music with the `chopintransformerv5`, you can run:
 ```shell
