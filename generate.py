@@ -49,7 +49,7 @@ def load_model(filepath, compile = False):
         file["hparams"] = hparams
 
     model = MusicTransformer(**file["hparams"]).to(device)
-    model.load_state_dict(file["state_dict"])
+    model.load_state_dict(file["state_dict"], strict=False)
 
     if compile:
         model = torch.compile(model)

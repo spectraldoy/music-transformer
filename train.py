@@ -249,7 +249,7 @@ class MusicTransformerTrainer:
         self.model = MusicTransformer(**ckpt["hparams"]).to(device)
         self.hparams = ckpt["hparams"]
         print("Loading the model...", end="")
-        print(self.model.load_state_dict(ckpt["model_state_dict"]))
+        print(self.model.load_state_dict(ckpt["model_state_dict"], strict=False))
 
         # create and load load optimizer and scheduler
         self.warmup_steps = ckpt["warmup_steps"]
